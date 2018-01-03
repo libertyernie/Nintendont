@@ -1,3 +1,9 @@
+This is a custom build of Nintendont that supports passing the nincfg.bin as a base-64-encoded string argument from Homebrew Channel.
+
+For more information about this feature, see: https://github.com/libertyernie/NinCFGEditor
+
+---
+
 ### Nintendont
 A Wii Homebrew Project to play GC Games on Wii and vWii on Wii U
 
