@@ -178,6 +178,25 @@ static s32 BTHandleData(void *arg,void *buffer,u16 len)
 			sync_after_write(arg, sizeof(struct BTPadStat));
 			sync_before_read(arg, sizeof(struct BTPadStat));
 		}
+		
+		if (BTPad[chan].button & (BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT)) {
+			// D-pad pressed - override joystick
+			BTPad[chan].xAxisL = 0;
+			BTPad[chan].yAxisL = 0;
+			if (BTPad[chan].button & BT_DPAD_UP) {
+				BTPad[chan].yAxisL += 0x7FFF;
+			}
+			if (BTPad[chan].button & BT_DPAD_DOWN) {
+				BTPad[chan].yAxisL -= 0x7FFF;
+			}
+			if (BTPad[chan].button & BT_DPAD_LEFT) {
+				BTPad[chan].xAxisL -= 0x7FFF;
+			}
+			if (BTPad[chan].button & BT_DPAD_RIGHT) {
+				BTPad[chan].xAxisL += 0x7FFF;
+			}
+		}
+		
 		BTPad[chan].used = stat->controller;
 		sync_after_write(&BTPad[chan], sizeof(struct BTPadCont));
 	}
