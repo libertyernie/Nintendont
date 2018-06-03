@@ -197,6 +197,8 @@ static s32 BTHandleData(void *arg,void *buffer,u16 len)
 			}
 		}
 		
+		BTPad[chan].button &= ~(BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT);
+		
 		BTPad[chan].used = stat->controller;
 		sync_after_write(&BTPad[chan], sizeof(struct BTPadCont));
 	}
