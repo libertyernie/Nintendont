@@ -51,6 +51,8 @@ static vu32* SensorBarPosition = (u32*)0x132C0494;
 
 static const u8 LEDState[] = { 0x10, 0x20, 0x40, 0x80, 0xF0 };
 
+extern u32 TITLE_ID;
+
 #define CHAN_NOT_SET 4
 
 #define TRANSFER_CONNECT 0
@@ -178,27 +180,31 @@ static s32 BTHandleData(void *arg,void *buffer,u16 len)
 			sync_after_write(arg, sizeof(struct BTPadStat));
 			sync_before_read(arg, sizeof(struct BTPadStat));
 		}
-		
-		if (BTPad[chan].button & (BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT)) {
-			// D-pad pressed - override joystick
-			BTPad[chan].xAxisL = 0;
-			BTPad[chan].yAxisL = 0;
-			if (BTPad[chan].button & BT_DPAD_UP) {
-				BTPad[chan].yAxisL += 0x7FFF;
+
+		if (TITLE_ID == 0x473453) {
+			// Four Swords Adventures (G4S)
+
+			if (BTPad[chan].button & (BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT)) {
+				// D-pad pressed - override joystick
+				BTPad[chan].xAxisL = 0;
+				BTPad[chan].yAxisL = 0;
+				if (BTPad[chan].button & BT_DPAD_UP) {
+					BTPad[chan].yAxisL += 0x7FFF;
+				}
+				if (BTPad[chan].button & BT_DPAD_DOWN) {
+					BTPad[chan].yAxisL -= 0x7FFF;
+				}
+				if (BTPad[chan].button & BT_DPAD_LEFT) {
+					BTPad[chan].xAxisL -= 0x7FFF;
+				}
+				if (BTPad[chan].button & BT_DPAD_RIGHT) {
+					BTPad[chan].xAxisL += 0x7FFF;
+				}
 			}
-			if (BTPad[chan].button & BT_DPAD_DOWN) {
-				BTPad[chan].yAxisL -= 0x7FFF;
-			}
-			if (BTPad[chan].button & BT_DPAD_LEFT) {
-				BTPad[chan].xAxisL -= 0x7FFF;
-			}
-			if (BTPad[chan].button & BT_DPAD_RIGHT) {
-				BTPad[chan].xAxisL += 0x7FFF;
-			}
+
+			BTPad[chan].button &= ~(BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT);
 		}
-		
-		BTPad[chan].button &= ~(BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT);
-		
+
 		BTPad[chan].used = stat->controller;
 		sync_after_write(&BTPad[chan], sizeof(struct BTPadCont));
 	}
