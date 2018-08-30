@@ -1,3 +1,13 @@
+## Nintendont - libertyernie's build
+
+Changes:
+
+* Exit is now L+Home, and swapping between Y/B and B/A is now L+Minus (thanks Raflos10)
+* You can load a base64-encoded nincfg.bin from the command line (for use with [NinCFGEditor](https://github.com/libertyernie/NinCFGEditor))
+* When using a Classic Controller with Four Swords Adventures, the D-pad will emulate the left analog stick
+
+.dol files (if any) are in the Releases section on GitHub.
+
 ### Nintendont
 A Wii Homebrew Project to play GC Games on Wii and vWii on Wii U
 
