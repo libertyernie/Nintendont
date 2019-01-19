@@ -208,7 +208,7 @@ static s32 BTHandleData(void *arg,void *buffer,u16 len)
 
 			// Map Select to D-Pad down when L is not pressed
 			if (BTPad[chan].button & BT_BUTTON_SELECT) {
-				if (BTPad[chan].button & ~BT_TRIGGER_L) {
+				if (!(BTPad[chan].button & BT_TRIGGER_L)) {
 					BTPad[chan].button |= BT_DPAD_DOWN;
 				}
 			}
