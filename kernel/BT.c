@@ -81,6 +81,7 @@ extern u32 TITLE_ID;
 #define C_NSWAP3	(1<<7)
 #define C_ISWAP		(1<<8)
 #define C_TestSWAP	(1<<9)
+#define C_G4S		(1<<30)
 
 static const s8 DEADZONE = 0x1A;
 
@@ -182,36 +183,15 @@ static s32 BTHandleData(void *arg,void *buffer,u16 len)
 			sync_after_write(arg, sizeof(struct BTPadStat));
 			sync_before_read(arg, sizeof(struct BTPadStat));
 		}
-
-		if (TITLE_ID == 0x473453) {
-			// Four Swords Adventures (G4S)
-
-			if (BTPad[chan].button & (BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT)) {
-				// D-pad pressed - override joystick
-				BTPad[chan].xAxisL = 0;
-				BTPad[chan].yAxisL = 0;
-				if (BTPad[chan].button & BT_DPAD_UP) {
-					BTPad[chan].yAxisL += 0x7FFF;
-				}
-				if (BTPad[chan].button & BT_DPAD_DOWN) {
-					BTPad[chan].yAxisL -= 0x7FFF;
-				}
-				if (BTPad[chan].button & BT_DPAD_LEFT) {
-					BTPad[chan].xAxisL -= 0x7FFF;
-				}
-				if (BTPad[chan].button & BT_DPAD_RIGHT) {
-					BTPad[chan].xAxisL += 0x7FFF;
-				}
-			}
-
-			BTPad[chan].button &= ~(BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT);
-
-			// Map Select to D-Pad down when L is not pressed
-			if (BTPad[chan].button & BT_BUTTON_SELECT) {
-				if (!(BTPad[chan].button & BT_TRIGGER_L)) {
-					BTPad[chan].button |= BT_DPAD_DOWN;
-				}
-			}
+		if(TITLE_ID == 0x473453 && !(stat->controller & C_G4S)) {
+			stat->controller |= C_G4S;
+			sync_after_write(arg, sizeof(struct BTPadStat));
+			sync_before_read(arg, sizeof(struct BTPadStat));
+		}
+		if(TITLE_ID == 0x474645 && !(stat->controller & C_GFE)) {
+			stat->controller |= C_GFE;
+			sync_after_write(arg, sizeof(struct BTPadStat));
+			sync_before_read(arg, sizeof(struct BTPadStat));
 		}
 
 		BTPad[chan].used = stat->controller;

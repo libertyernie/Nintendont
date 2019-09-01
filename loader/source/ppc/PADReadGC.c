@@ -53,6 +53,7 @@ const s8 DEADZONE = 0x1A;
 #define C_NSWAP2	(1<<6)
 #define C_NSWAP3	(1<<7)
 #define C_ISWAP		(1<<8)
+#define C_G4S		(1<<30)
 
 #define ALIGN32(x) 	(((u32)x) & (~31))
 
@@ -1343,6 +1344,33 @@ u32 _start(u32 calledByGame)
 			//L+HOME to exit
 			if((BTPad[chan].button & BT_TRIGGER_L) && (BTPad[chan].button & BT_BUTTON_HOME))
 				goto DoExit;
+
+			if (BTPad[chan].used & C_G4S) {
+				// The Legend of Zelda: Four Swords Adventures
+
+				if (BTPad[chan].button & (BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT)) {
+					// D-pad pressed - override joystick
+					Pad[chan].stickX = 0;
+					Pad[chan].stickY = 0;
+					if (BTPad[chan].button & BT_DPAD_UP) {
+						Pad[chan].stickY += 0x7F;
+					}
+					if (BTPad[chan].button & BT_DPAD_DOWN) {
+						Pad[chan].stickY -= 0x7F;
+					}
+					if (BTPad[chan].button & BT_DPAD_LEFT) {
+						Pad[chan].stickX -= 0x7F;
+					}
+					if (BTPad[chan].button & BT_DPAD_RIGHT) {
+						Pad[chan].stickX += 0x7F;
+					}
+				}
+
+				button &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT);
+
+				if (BTPad[chan].button & BT_BUTTON_SELECT)
+					button |= PAD_BUTTON_DOWN;
+			}
 		}	
 		
 		Pad[chan].button = button;
