@@ -54,6 +54,7 @@ const s8 DEADZONE = 0x1A;
 #define C_NSWAP3	(1<<7)
 #define C_ISWAP		(1<<8)
 #define C_G4S		(1<<30)
+#define C_GFE		(1<<31)
 
 #define ALIGN32(x) 	(((u32)x) & (~31))
 
@@ -731,7 +732,33 @@ u32 _start(u32 calledByGame)
 
 		u16 button = 0;
 
-		if(BTPad[chan].used & C_CC)
+		if(BTPad[chan].used & C_GFE) {
+			// Fire Emblem: Path of Radiance
+			if((BTPad[chan].button & BT_TRIGGER_L) || (BTPad[chan].triggerL > 0x40))
+				button |= PAD_BUTTON_X;
+			if((BTPad[chan].button & BT_TRIGGER_R) || (BTPad[chan].triggerR > 0x40))
+				button |= PAD_BUTTON_Y;
+
+			if(BTPad[chan].button & BT_TRIGGER_ZL)
+			{
+				button |= PAD_TRIGGER_L;
+				Pad[chan].triggerLeft = 0xFF;
+			}
+			else
+				Pad[chan].triggerLeft = 0;
+
+			if(BTPad[chan].button & BT_TRIGGER_ZR)
+			{
+				button |= PAD_TRIGGER_R;
+				Pad[chan].triggerRight = 0xFF;
+			}
+			else
+				Pad[chan].triggerRight = 0;
+
+			if(BTPad[chan].button & BT_BUTTON_SELECT)
+				button |= PAD_TRIGGER_Z;
+		}
+		else if(BTPad[chan].used & C_CC)
 		{
 			Pad[chan].triggerLeft = BTPad[chan].triggerL;
 			if(BTPad[chan].button & BT_TRIGGER_L)

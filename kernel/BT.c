@@ -82,6 +82,7 @@ extern u32 TITLE_ID;
 #define C_ISWAP		(1<<8)
 #define C_TestSWAP	(1<<9)
 #define C_G4S		(1<<30)
+#define C_GFE		(1<<31)
 
 static const s8 DEADZONE = 0x1A;
 
