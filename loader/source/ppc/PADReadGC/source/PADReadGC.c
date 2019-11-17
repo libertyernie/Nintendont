@@ -736,6 +736,10 @@ u32 PADRead(u32 calledByGame)
 
 			if(BTPad[chan].button & BT_BUTTON_SELECT)
 				button |= PAD_TRIGGER_Z;
+
+			// Game Boy style soft reset
+			if ((BTPad[chan].button & 0x1450) == 0x1450)
+				button |= 0x1030;
 		}
 		else if(BTPad[chan].used & C_CC)
 		{
