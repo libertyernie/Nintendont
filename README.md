@@ -3,8 +3,15 @@
 Changes:
 
 * Exit is now L+Home, and swapping between Y/B and B/A is now L+Minus (thanks Raflos10)
-* You can load a base64-encoded nincfg.bin from the command line (for use with [NinCFGEditor](https://github.com/libertyernie/NinCFGEditor))
-* When using a Classic Controller with Four Swords Adventures, the D-pad will emulate the left analog stick
+* You can load a base64-encoded nincfg.bin from the command line (for loading specific games directly from Homebrew Channel entries; also see [NinCFGEditor](https://github.com/libertyernie/NinCFGEditor))
+* Special controller mappings for the Wii Classic Controller in certain games:
+    * **The Legend of Zelda: Four Swords Adventures**
+	    * The D-pad will emulate the left analog stick
+	* **Fire Emblem: Path of Radiance**
+		* The function of the Z button is moved to Select
+		* The functions of the L and R buttons are moved to ZL and ZR
+		* L now acts as X, and R acts as Y
+		* You can perform a soft reset with A+B+Start+Select
 
 .dol files (if any) are in the Releases section on GitHub.
 

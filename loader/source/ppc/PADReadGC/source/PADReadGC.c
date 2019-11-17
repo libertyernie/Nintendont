@@ -27,6 +27,8 @@ static vu32* PADIsBarrel = (vu32*)0xD3003130;
 static vu32* PADBarrelEnabled = (vu32*)0xD3003140;
 static vu32* PADBarrelPress = (vu32*)0xD3003150;
 
+static vu32* TitleID = (vu32*)0x932C0498;
+
 static volatile struct BTPadCont *BTPad = (volatile struct BTPadCont*)0x932F0000;
 static vu32* BTMotor = (vu32*)0x93003040;
 static vu32* BTPadFree = (vu32*)0x93003050;
@@ -59,8 +61,6 @@ const s8 DEADZONE = 0x1A;
 #define C_NSWAP2	(1<<6)
 #define C_NSWAP3	(1<<7)
 #define C_ISWAP		(1<<8)
-#define C_G4S		(1<<30)
-#define C_GFE		(1<<31)
 
 #define ALIGN32(x) 	(((u32)x) & (~31))
 
@@ -711,7 +711,7 @@ u32 PADRead(u32 calledByGame)
 
 		u16 button = 0;
 
-		if(BTPad[chan].used & C_GFE) {
+		if(*TitleID == 0x474645) {
 			// Fire Emblem: Path of Radiance
 			if((BTPad[chan].button & BT_TRIGGER_L) || (BTPad[chan].triggerL > 0x40))
 				button |= PAD_BUTTON_X;
@@ -1355,7 +1355,7 @@ u32 PADRead(u32 calledByGame)
 			if((BTPad[chan].button & BT_TRIGGER_L) && (BTPad[chan].button & BT_BUTTON_HOME))
 				goto DoExit;
 
-			if (BTPad[chan].used & C_G4S) {
+			if (*TitleID == 0x473453) {
 				// The Legend of Zelda: Four Swords Adventures
 
 				if (BTPad[chan].button & (BT_DPAD_UP | BT_DPAD_DOWN | BT_DPAD_LEFT | BT_DPAD_RIGHT)) {

@@ -81,8 +81,6 @@ extern u32 TITLE_ID;
 #define C_NSWAP3	(1<<7)
 #define C_ISWAP		(1<<8)
 #define C_TestSWAP	(1<<9)
-#define C_G4S		(1<<30)
-#define C_GFE		(1<<31)
 
 static const s8 DEADZONE = 0x1A;
 
@@ -181,16 +179,6 @@ static s32 BTHandleData(void *arg,void *buffer,u16 len)
 		{
 			//dbgprintf("%s rumble for wiimote\n", (stat->controller & C_RUMBLE_WM) ? "Disabling" : "Enabling");
 			stat->controller = (stat->controller & C_RUMBLE_WM) ? (stat->controller & ~C_RUMBLE_WM) : (stat->controller | C_RUMBLE_WM);
-			sync_after_write(arg, sizeof(struct BTPadStat));
-			sync_before_read(arg, sizeof(struct BTPadStat));
-		}
-		if(TITLE_ID == 0x473453 && !(stat->controller & C_G4S)) {
-			stat->controller |= C_G4S;
-			sync_after_write(arg, sizeof(struct BTPadStat));
-			sync_before_read(arg, sizeof(struct BTPadStat));
-		}
-		if(TITLE_ID == 0x474645 && !(stat->controller & C_GFE)) {
-			stat->controller |= C_GFE;
 			sync_after_write(arg, sizeof(struct BTPadStat));
 			sync_before_read(arg, sizeof(struct BTPadStat));
 		}

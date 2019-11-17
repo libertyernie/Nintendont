@@ -258,6 +258,9 @@ void DIinit( bool FirstTime )
 	GAME_ID6 = R16(4);
 	TITLE_ID = (GAME_ID >> 8);
 
+	*(vu32*)0x132C0498 = TITLE_ID;
+	sync_after_write((void*)0x132C0498, sizeof(vu32));
+
 	GCAMKeyA = read32(0);
 	GCAMKeyB = read32(4);
 	GCAMKeyC = read32(8);
