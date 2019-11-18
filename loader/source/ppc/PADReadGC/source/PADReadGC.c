@@ -171,6 +171,61 @@ u32 PADRead(u32 calledByGame)
 		if(drcbutton & WIIDRC_BUTTON_PLUS) button |= PAD_BUTTON_START;
 		//L+HOME to exit
 		if((drcbutton & WIIDRC_BUTTON_L) && (drcbutton & WIIDRC_BUTTON_HOME)) goto DoExit;
+
+		if (*TitleID == 0x474645) {
+			// Fire Emblem: Path of Radiance
+
+			// Map both L and X to X
+			if (drcbutton & WIIDRC_BUTTON_L)
+				button |= PAD_BUTTON_X;
+			// Map both R and Y to Y
+			if (drcbutton & WIIDRC_BUTTON_R)
+				button |= PAD_BUTTON_Y;
+
+			// Only ZL maps to L
+			if (drcbutton & WIIDRC_BUTTON_ZL)
+			{
+				button |= PAD_TRIGGER_L;
+				Pad[chan].triggerLeft = 0xFF;
+			}
+			else
+			{
+				button &= ~PAD_TRIGGER_L;
+				Pad[chan].triggerLeft = 0;
+			}
+
+			// Only ZR maps to R
+			if (drcbutton & WIIDRC_BUTTON_ZR)
+			{
+				button |= PAD_TRIGGER_R;
+				Pad[chan].triggerRight = 0xFF;
+			}
+			else
+			{
+				button &= ~PAD_TRIGGER_R;
+				Pad[chan].triggerRight = 0;
+			}
+
+			// Only - maps to Z
+			if (drcbutton & WIIDRC_BUTTON_MINUS)
+				button |= PAD_TRIGGER_Z;
+			else
+				button &= ~PAD_TRIGGER_Z;
+
+			// Game Boy style soft reset
+			if ((drcbutton & 0xC00C) == 0xC00C)
+				button |= 0x1030;
+		} else if (*TitleID == 0x473453) {
+			// The Legend of Zelda: Four Swords Adventures
+
+			// Hide D-pad from game (will be used to emulate joystick)
+			button &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT);
+
+			// Map Select to D-pad down
+			if (drcbutton & WIIDRC_BUTTON_MINUS)
+				button |= PAD_BUTTON_DOWN;
+		}
+
 		//write in mapped out buttons
 		Pad[0].button = button;
 		if((Pad[0].button&0x1030) == 0x1030) //reset by pressing start, Z, R
@@ -190,6 +245,28 @@ u32 PADRead(u32 calledByGame)
 		Pad[0].substickX = tmp_stick8;
 		_DRC_BUILD_TMPSTICK(i2cdata[7]);
 		Pad[0].substickY = tmp_stick8;
+
+		if (*TitleID == 0x473453) {
+			// The Legend of Zelda: Four Swords Adventures
+
+			if (drcbutton & (WIIDRC_BUTTON_UP | WIIDRC_BUTTON_DOWN | WIIDRC_BUTTON_LEFT | WIIDRC_BUTTON_RIGHT)) {
+				// D-pad pressed - override joystick
+				Pad[0].stickX = 0;
+				Pad[0].stickY = 0;
+				if (drcbutton & WIIDRC_BUTTON_UP) {
+					Pad[0].stickY += 0x7F;
+				}
+				if (drcbutton & WIIDRC_BUTTON_DOWN) {
+					Pad[0].stickY -= 0x7F;
+				}
+				if (drcbutton & WIIDRC_BUTTON_LEFT) {
+					Pad[0].stickX -= 0x7F;
+				}
+				if (drcbutton & WIIDRC_BUTTON_RIGHT) {
+					Pad[0].stickX += 0x7F;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -713,29 +790,43 @@ u32 PADRead(u32 calledByGame)
 
 		if(*TitleID == 0x474645) {
 			// Fire Emblem: Path of Radiance
+
+			// Map both L and X to X
 			if((BTPad[chan].button & BT_TRIGGER_L) || (BTPad[chan].triggerL > 0x40))
 				button |= PAD_BUTTON_X;
+			// Map both R and Y to Y
 			if((BTPad[chan].button & BT_TRIGGER_R) || (BTPad[chan].triggerR > 0x40))
 				button |= PAD_BUTTON_Y;
 
+			// Only ZL maps to L
 			if(BTPad[chan].button & BT_TRIGGER_ZL)
 			{
 				button |= PAD_TRIGGER_L;
 				Pad[chan].triggerLeft = 0xFF;
 			}
 			else
+			{
+				button &= ~PAD_TRIGGER_L;
 				Pad[chan].triggerLeft = 0;
+			}
 
+			// Only ZR maps to R
 			if(BTPad[chan].button & BT_TRIGGER_ZR)
 			{
 				button |= PAD_TRIGGER_R;
 				Pad[chan].triggerRight = 0xFF;
 			}
 			else
+			{
+				button &= ~PAD_TRIGGER_R;
 				Pad[chan].triggerRight = 0;
+			}
 
+			// Only - maps to Z
 			if(BTPad[chan].button & BT_BUTTON_SELECT)
 				button |= PAD_TRIGGER_Z;
+			else
+				button &= ~PAD_TRIGGER_Z;
 
 			// Game Boy style soft reset
 			if ((BTPad[chan].button & 0x1450) == 0x1450)
@@ -1376,8 +1467,10 @@ u32 PADRead(u32 calledByGame)
 					}
 				}
 
+				// Hide D-pad from game (will be used to emulate joystick)
 				button &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT);
 
+				// Map Select to D-pad down
 				if (BTPad[chan].button & BT_BUTTON_SELECT)
 					button |= PAD_BUTTON_DOWN;
 			}
