@@ -186,24 +186,24 @@ u32 PADRead(u32 calledByGame)
 			if (drcbutton & WIIDRC_BUTTON_ZL)
 			{
 				button |= PAD_TRIGGER_L;
-				Pad[chan].triggerLeft = 0xFF;
+				Pad[0].triggerLeft = 0xFF;
 			}
 			else
 			{
 				button &= ~PAD_TRIGGER_L;
-				Pad[chan].triggerLeft = 0;
+				Pad[0].triggerLeft = 0;
 			}
 
 			// Only ZR maps to R
 			if (drcbutton & WIIDRC_BUTTON_ZR)
 			{
 				button |= PAD_TRIGGER_R;
-				Pad[chan].triggerRight = 0xFF;
+				Pad[0].triggerRight = 0xFF;
 			}
 			else
 			{
 				button &= ~PAD_TRIGGER_R;
-				Pad[chan].triggerRight = 0;
+				Pad[0].triggerRight = 0;
 			}
 
 			// Only - maps to Z
@@ -215,15 +215,6 @@ u32 PADRead(u32 calledByGame)
 			// Game Boy style soft reset
 			if ((drcbutton & 0xC00C) == 0xC00C)
 				button |= 0x1030;
-		} else if (*TitleID == 0x473453) {
-			// The Legend of Zelda: Four Swords Adventures
-
-			// Hide D-pad from game (will be used to emulate joystick)
-			button &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT);
-
-			// Map Select to D-pad down
-			if (drcbutton & WIIDRC_BUTTON_MINUS)
-				button |= PAD_BUTTON_DOWN;
 		}
 
 		//write in mapped out buttons
@@ -266,6 +257,13 @@ u32 PADRead(u32 calledByGame)
 					Pad[0].stickX += 0x7F;
 				}
 			}
+
+			// Hide D-pad from game (will be used to emulate joystick)
+			Pad[0].button &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT);
+
+			// Map Select to D-pad down
+			if (drcbutton & WIIDRC_BUTTON_MINUS)
+				Pad[0].button |= PAD_BUTTON_DOWN;
 		}
 	}
 	else
