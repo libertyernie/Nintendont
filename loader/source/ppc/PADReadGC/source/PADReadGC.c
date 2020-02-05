@@ -172,51 +172,6 @@ u32 PADRead(u32 calledByGame)
 		//L+HOME to exit
 		if((drcbutton & WIIDRC_BUTTON_L) && (drcbutton & WIIDRC_BUTTON_HOME)) goto DoExit;
 
-		if (*TitleID == 0x474645) {
-			// Fire Emblem: Path of Radiance
-
-			// Map both L and X to X
-			if (drcbutton & WIIDRC_BUTTON_L)
-				button |= PAD_BUTTON_X;
-			// Map both R and Y to Y
-			if (drcbutton & WIIDRC_BUTTON_R)
-				button |= PAD_BUTTON_Y;
-
-			// Only ZL maps to L
-			if (drcbutton & WIIDRC_BUTTON_ZL)
-			{
-				button |= PAD_TRIGGER_L;
-				Pad[0].triggerLeft = 0xFF;
-			}
-			else
-			{
-				button &= ~PAD_TRIGGER_L;
-				Pad[0].triggerLeft = 0;
-			}
-
-			// Only ZR maps to R
-			if (drcbutton & WIIDRC_BUTTON_ZR)
-			{
-				button |= PAD_TRIGGER_R;
-				Pad[0].triggerRight = 0xFF;
-			}
-			else
-			{
-				button &= ~PAD_TRIGGER_R;
-				Pad[0].triggerRight = 0;
-			}
-
-			// Only - maps to Z
-			if (drcbutton & WIIDRC_BUTTON_MINUS)
-				button |= PAD_TRIGGER_Z;
-			else
-				button &= ~PAD_TRIGGER_Z;
-
-			// Game Boy style soft reset
-			if ((drcbutton & 0xC00C) == 0xC00C)
-				button |= 0x1030;
-		}
-
 		//write in mapped out buttons
 		Pad[0].button = button;
 		if((Pad[0].button&0x1030) == 0x1030) //reset by pressing start, Z, R
@@ -786,51 +741,7 @@ u32 PADRead(u32 calledByGame)
 
 		u16 button = 0;
 
-		if(*TitleID == 0x474645) {
-			// Fire Emblem: Path of Radiance
-
-			// Map both L and X to X
-			if((BTPad[chan].button & BT_TRIGGER_L) || (BTPad[chan].triggerL > 0x40))
-				button |= PAD_BUTTON_X;
-			// Map both R and Y to Y
-			if((BTPad[chan].button & BT_TRIGGER_R) || (BTPad[chan].triggerR > 0x40))
-				button |= PAD_BUTTON_Y;
-
-			// Only ZL maps to L
-			if(BTPad[chan].button & BT_TRIGGER_ZL)
-			{
-				button |= PAD_TRIGGER_L;
-				Pad[chan].triggerLeft = 0xFF;
-			}
-			else
-			{
-				button &= ~PAD_TRIGGER_L;
-				Pad[chan].triggerLeft = 0;
-			}
-
-			// Only ZR maps to R
-			if(BTPad[chan].button & BT_TRIGGER_ZR)
-			{
-				button |= PAD_TRIGGER_R;
-				Pad[chan].triggerRight = 0xFF;
-			}
-			else
-			{
-				button &= ~PAD_TRIGGER_R;
-				Pad[chan].triggerRight = 0;
-			}
-
-			// Only - maps to Z
-			if(BTPad[chan].button & BT_BUTTON_SELECT)
-				button |= PAD_TRIGGER_Z;
-			else
-				button &= ~PAD_TRIGGER_Z;
-
-			// Game Boy style soft reset
-			if ((BTPad[chan].button & 0x1450) == 0x1450)
-				button |= 0x1030;
-		}
-		else if(BTPad[chan].used & C_CC)
+		if(BTPad[chan].used & C_CC)
 		{
 			Pad[chan].triggerLeft = BTPad[chan].triggerL;
 			if(BTPad[chan].button & BT_TRIGGER_L)

@@ -8,13 +8,6 @@ Changes:
     * **The Legend of Zelda: Four Swords Adventures**
 	    * D-Pad => Left Stick
 		* Select => D-Pad Down
-	* **Fire Emblem: Path of Radiance**
-		* Select => Z
-		* ZL => L
-		* ZR => R
-		* L => X
-		* R => Y
-		* A + B + Start + Select => Reset
 
 .dol files (if any) are in the Releases section on GitHub.
 
