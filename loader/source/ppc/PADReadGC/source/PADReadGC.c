@@ -761,6 +761,8 @@ u32 PADRead(u32 calledByGame)
 				button |= PAD_BUTTON_A;
 			if(BTPad[chan].button & WM_BUTTON_B)
 				button |= PAD_BUTTON_B;
+			if(BTPad[chan].button & WM_BUTTON_ONE)
+				button |= PAD_BUTTON_Y;
 
 			if(BTPad[chan].button & NUN_BUTTON_Z)
 			{
